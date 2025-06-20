@@ -2,57 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DOG ZONE!!!</title>
+  <title>Dog of the Day</title>
   <script src="https://unpkg.com/vue@3"></script>
   <style>
     body {
-      background: linear-gradient(to bottom, red, yellow, lime, cyan, blue, magenta);
-      font-family: "Comic Sans MS", cursive;
-      font-size: 22px;
-      color: hotpink;
-      text-shadow: 1px 1px 2px black;
-      overflow-x: scroll;
-    }
-    h1 {
-      animation: flash 1s infinite;
-    }
-    @keyframes flash {
-      0% { color: red; }
-      25% { color: yellow; }
-      50% { color: lime; }
-      75% { color: cyan; }
-      100% { color: magenta; }
-    }
-    .btn {
-      padding: 25px;
-      font-size: 20px;
-      background: orange;
-      border: 5px dashed black;
-      margin-top: 50px;
-      cursor: crosshair;
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f5f5f5;
+      text-align: center;
     }
     img {
-      animation: spin 3s infinite linear;
-      width: 90vw;
+      max-width: 400px;
+      margin-top: 20px;
     }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    marquee {
-      font-size: 30px;
-      color: white;
-      background-color: black;
+    .button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
   <div id="app">
-    <h1 @click="getDog">DOG OF THE DAY 🐶🐶🐶</h1>
-    <img v-if="dogImage" :src="dogImage">
-    <button class="btn" @click="getDog">Don't Click This 🛑</button>
-    <p>The rarest dog ever seen. We think it's invisible but also maybe glowing. Who knows?</p>
-    <marquee scrollamount="40">DOG DOG DOG DOG DOG DOG DOG DOG DOG DOG</marquee>
+    <h1>Dog of the Day</h1>
+    <img v-if="dogImage" :src="dogImage" alt="Random dog image">
+
+    <button class="button" @click="getDog">Get Another Dog Pic!</button>
+
+    <p>Dog of the Day: Ultra rare invisible poodle with glow-in-the-dark fur.</p>
   </div>
 
   <script>
@@ -62,13 +39,17 @@
       data() {
         return {
           dogImage: ''
-        };
+        }
       },
       methods: {
         async getDog() {
-          const res = await fetch('https://dog.ceo/api/breeds/image/random');
-          const data = await res.json();
-          this.dogImage = data.message;
+          try {
+            const res = await fetch('https://dog.ceo/api/breeds/image/random');
+            const data = await res.json();
+            this.dogImage = data.message;
+          } catch (error) {
+            console.error('Failed to fetch dog image:', error);
+          }
         }
       },
       mounted() {
