@@ -2,39 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DOG OF THE DAY!!! 🐶🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾</title>
+  <title>Dog of the Day</title>
   <script src="https://unpkg.com/vue@3"></script>
   <style>
     body {
-      background: linear-gradient(red, blue, green, yellow);
-      font-family: "Comic Sans MS", cursive;
-      color: lime;
-      font-size: 24px;
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f5f5f5;
+      text-align: center;
+    }
+    img {
+      max-width: 400px;
+      margin-top: 20px;
     }
     .button {
       margin-top: 20px;
-      padding: 30px;
-      background: orange;
-      border: 5px dashed magenta;
-      cursor: crosshair;
-    }
-    img {
-      width: 100%;
-      animation: spin 5s infinite linear;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      padding: 10px 20px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
   <div id="app">
-    <h1 @click="getDog">CLICK ANYWHERE FOR DOG (but also nowhere specifically)</h1>
-    <img :src="dogImage" alt="">
+    <h1>Dog of the Day</h1>
+
+    <!-- Image shown only when dogImage is available -->
+    <img v-if="dogImage" :src="dogImage" alt="Random dog image">
+
     <button class="button" @click="getDog">Get Another Dog Pic!</button>
+
     <p>Dog of the Day: Ultra rare invisible poodle with glow-in-the-dark fur.</p>
-    <marquee behavior="alternate" scrollamount="30">DOGS DOGS DOGS DOGS DOGS</marquee>
   </div>
 
   <script>
@@ -48,9 +45,13 @@
       },
       methods: {
         async getDog() {
-          const res = await fetch('https://dog.ceo/api/breeds/image/random');
-          const data = await res.json();
-          this.dogImage = data.message;
+          try {
+            const res = await fetch('https://dog.ceo/api/breeds/image/random');
+            const data = await res.json();
+            this.dogImage = data.message;
+          } catch (error) {
+            console.error('Failed to fetch dog image:', error);
+          }
         }
       },
       mounted() {
