@@ -22,3 +22,28 @@
       padding: 20px 60px;
       border-radius: 50%;
       background-color: cyan;
+       color: red;
+      cursor: crosshair;
+    }
+    #dog-details {
+      text-align: center;
+      margin-top: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1 @click="annoyUser()">🐶 D0GZ OF D@Y! 🐾🐾🐾</h1>
+
+    <button @click="getDog()">!!!Cliccckkkk me 4 a D0g!!!!</button>
+
+    <div id="dog-details" v-if="dogImage">
+      <img :src="dogImage" :alt="'Dog of the day'" width="600" />
+      <h2>Name: sPoTtIE123</h2>
+      <p>Breed: Totally Unknown / SomewhatFluff</p>
+      <p>Age: 🐶🐶🐶🐶🐶</p>
+    </div>
+  </div>
+
+  <script>
+
