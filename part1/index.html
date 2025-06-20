@@ -46,4 +46,27 @@
   </div>
 
   <script>
+     const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          dogImage: null,
+        };
+      },
+      methods: {
+        async getDog() {
+          const res = await fetch("https://dog.ceo/api/breeds/image/random");
+          const data = await res.json();
+          this.dogImage = data.message;
+        },
+        annoyUser() {
+          alert("TOO LATE 🐕‍🦺🚨🚨🚨");
+          alert("WHY DID YOU CLICK THAT?!!");
+        }
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>
 
