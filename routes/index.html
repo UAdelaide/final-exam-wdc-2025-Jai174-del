@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DOG OF THE DAY!!! 🐶🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾</title>
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      background: linear-gradient(red, blue, green, yellow);
+      font-family: "Comic Sans MS", cursive;
+      color: lime;
+      font-size: 24px;
+    }
+    .button {
+      margin-top: 20px;
+      padding: 30px;
+      background: orange;
+      border: 5px dashed magenta;
+      cursor: crosshair;
+    }
+    img {
+      width: 100%;
+      animation: spin 5s infinite linear;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1 @click="getDog">CLICK ANYWHERE FOR DOG (but also nowhere specifically)</h1>
+    <img :src="dogImage" alt="">
+    <button class="button" @click="getDog">Get Another Dog Pic!</button>
+    <p>Dog of the Day: Ultra rare invisible poodle with glow-in-the-dark fur.</p>
+    <marquee behavior="alternate" scrollamount="30">DOGS DOGS DOGS DOGS DOGS</marquee>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          dogImage: ''
+        }
+      },
+      methods: {
+        async getDog() {
+          const res = await fetch('https://dog.ceo/api/breeds/image/random');
+          const data = await res.json();
+          this.dogImage = data.message;
+        }
+      },
+      mounted() {
+        this.getDog();
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
