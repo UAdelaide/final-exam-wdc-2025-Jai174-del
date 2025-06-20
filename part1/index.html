@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BarkZone!!</title>
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red 90deg);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-align: left;
+      font-size: 30px;
+      margin: 0;
+      overflow-x: auto;
+    }
+    h1 {
+      animation: rainbow 1s infinite linear;
+      letter-spacing: 0.5em;
+      text-shadow: 2px 2px 8px black;
+    }
+    @keyframes rainbow {
+      0% { color: red; }
+      25% { color: yellow; }
+      50% { color: lime; }
+      75% { color: cyan; }
+      100% { color: magenta; }
+    }
+    img {
+      width: 500px;
+      height: 500px;
+      display: block;
+      animation: wiggle 0.5s infinite alternate;
+      border: 10px dotted orange;
+    }
+    @keyframes wiggle {
+      from { transform: rotate(-15deg); }
+      to   { transform: rotate(15deg); }
+    }
+    button {
+      font-size: 36px;
+      background: black;
+      color: lime;
+      border: 5px dashed yellow;
+      margin: 50px 0;
+      padding: 25px 5px;
+      cursor: pointer;
+    }
+    marquee {
+      font-size: 40px;
+      background: purple;
+      color: orange;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1 @click="fetchDog">DOGGO BLAST!!!</h1>
+    <marquee>Such dog. Much wow. Scroll horizontally please.</marquee>
+    <!-- No alt attribute for accessibility error -->
+    <img v-if="dog" :src="dog">
+    <button @click="fetchDog" style="position: absolute; right: 5vw; top: 5vh;">DOG NOW</button>
+    <!-- superfluous info, not labeled -->
+    <div style="font-size:48px; color:red;">???</div>
+    <div>Dog name: <span style="color:cyan; font-weight:bold;">Sir Borkington the Fifth</span></div>
+    <div style="color:yellow;">Secret owner: ???</div>
+    <div style="width:2000px; height:10px;"></div>
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return { dog: '' }
+      },
+      methods: {
+        async fetchDog() {
+          const res = await fetch('https://dog.ceo/api/breeds/image/random');
+          const data = await res.json();
+          this.dog = data.message;
+        }
+      },
+      mounted() {
+        this.fetchDog();
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
