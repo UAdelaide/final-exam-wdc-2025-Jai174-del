@@ -9,8 +9,10 @@
 </head>
 <body class="bg-light">
   <div id="app" class="container py-4">
-    <h1 class="mb-4 text-primary">Owner Dashboard</h1>
-
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="text-primary mb-0">Owner Dashboard</h1>
+      <button type="button" @click="logout" class="btn btn-danger">Logout</button>
+    </div>
     <!-- Walk request form -->
     <div class="card mb-4">
       <div class="card-header bg-primary text-white">
@@ -19,8 +21,13 @@
       <div class="card-body">
         <form @submit.prevent="submitWalkRequest">
           <div class="mb-3">
-            <label class="form-label">Dog ID</label>
-            <input v-model="form.dog_id" type="number" class="form-control" required>
+            <label class="form-label">Dog</label>
+            <select v-model="form.dog_id" class="form-select" required>
+              <option value="" disabled selected>-- Choose a dog --</option>
+              <option v-for="dog in myDogs" :value="dog.dog_id">
+                {{ dog.name }}
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
@@ -68,6 +75,25 @@
     const { createApp, ref, onMounted } = Vue;
 
     createApp({
+      methods: {
+        async logout() {
+          try {
+            const res = await fetch('/api/users/logout', {
+              method: 'POST',
+              credentials: 'include'
+            });
+
+            if (res.ok) {
+              window.location.href = '/';
+            } else {
+              alert('Logout failed.');
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Server error on logout.');
+          }
+        }
+      },
       setup() {
         const form = ref({
           dog_id: '',
@@ -77,6 +103,7 @@
         });
 
         const walks = ref([]);
+        const myDogs = ref([]);
         const message = ref('');
         const error = ref('');
 
@@ -88,7 +115,20 @@
             error.value = 'Failed to load walk requests';
           }
         }
+        async function loadMyDogs() {
+          try {
+            const res = await fetch('/api/users/me', {
+              credentials: 'include'
+            });
+            if (!res.ok) throw new Error('Not logged in');
+            const user = await res.json();
 
+            const dogRes = await fetch(`/api/users/${user.user_id}/dogs`);
+            myDogs.value = await dogRes.json();
+          } catch (err) {
+            error.value = 'Failed to load your dogs';
+          }
+        }
         async function submitWalkRequest() {
           try {
             const res = await fetch('/api/walks', {
@@ -117,11 +157,13 @@
 
         onMounted(() => {
           loadWalks();
+          loadMyDogs();
         });
 
         return {
           form,
           walks,
+          myDogs,
           message,
           error,
           submitWalkRequest
