@@ -26,6 +26,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 app.use('/api/walks', walkRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/login', loginRoutes);
+app.use('/', dashboardRoutes);
 
 // Export the app instead of listening here
 module.exports = app;
