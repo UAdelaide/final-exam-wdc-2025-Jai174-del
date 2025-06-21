@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db'); // Adjust path if your DB connection file is named differently
+const db = require('../db');
 
 router.post('/', async (req, res) => {
   const { username, password } = req.body;
