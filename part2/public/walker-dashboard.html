@@ -9,8 +9,10 @@
 </head>
 <body class="bg-light">
   <div id="app" class="container py-4">
-    <h1 class="mb-4 text-success">Walker Dashboard</h1>
-
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="text-primary mb-0">Walker Dashboard</h1>
+      <button type="button" @click="logout" class="btn btn-danger">Logout</button>
+    </div>
     <!-- Alert messages -->
     <div v-if="message" class="alert alert-info">{{ message }}</div>
     <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -39,11 +41,30 @@
     const { createApp, ref, onMounted } = Vue;
 
     createApp({
+      methods: {
+        async logout() {
+          try {
+            const res = await fetch('/api/users/logout', {
+              method: 'POST',
+              credentials: 'include'
+            });
+
+            if (res.ok) {
+              window.location.href = '/';
+            } else {
+              alert('Logout failed.');
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Server error on logout.');
+          }
+        }
+      },
       setup() {
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
-        const user = 3;
+        const user = ref(null);
 
         async function loadWalkRequests() {
           try {
@@ -60,7 +81,7 @@
             const res = await fetch(`/api/walks/${requestId}/apply`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ walker_id: user })
+              body: JSON.stringify({ walker_id: user.value.user_id })
             });
             const result = await res.json();
 
@@ -74,7 +95,21 @@
           }
         }
 
+        async function getCurrentUser() {
+          try {
+            const res = await fetch('/api/users/me', {
+              credentials: 'include'
+            });
+            if (!res.ok) throw new Error('Not logged in');
+            user.value = await res.json();
+          } catch (err) {
+            error.value = 'Failed to fetch user';
+          }
+        }
+
+
         onMounted(() => {
+          getCurrentUser();
           loadWalkRequests();
         });
 
